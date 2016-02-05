@@ -71,3 +71,56 @@ end
 
 # Project 2: Enumerable Methods
 
+# Implement various methods in the existing Enumerable module:
+
+module Enumerable
+	# my_each, which works exactly like each
+	def my_each
+		# Return Enumerator if no block given
+		return self.enum_for(:my_each) unless block_given?
+		# Otherwise pass each element to block
+		self_array = self.to_a
+		0.upto(self_array.length-1) do |i|
+			yield self_array[i]
+		end
+		self
+	end
+	
+	# my_each_with_index = each_with_index
+	def my_each_with_index
+		# Same as my_each...
+		return self.enum_for(:my_each_with_index) unless block_given?
+		self_array = self.to_a
+		0.upto(self_array.length-1) do |i|
+			# ...except pass index to block as well
+			yield self_array[i], i
+		end
+		self
+	end
+	
+	# my_select = select
+	def my_select
+		# Return enumerator if no block given
+		return self.enum_for(:my_select) unless block_given?
+		# Returns a Hash if self is a Hash
+		if self.is_a? Hash
+			selected = {}
+			# Go through each of the elements:
+			self.my_each do |key, value|
+				# Add to hash if block returns true
+				selected[key] = value if yield(key, value)
+			end
+		# Otherwise, make an array
+		else
+			selected = []
+			# Go through each of the elements:
+			self.my_each do |element|
+				# If the block returns true, append element to the array
+				selected.push(element) if yield(element)
+			end
+		end
+		# Return the selected elements
+		selected
+	end
+end
+
