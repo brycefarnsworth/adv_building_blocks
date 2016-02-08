@@ -122,5 +122,62 @@ module Enumerable
 		# Return the selected elements
 		selected
 	end
+	
+	# my_all? = all?
+	def my_all?
+		if block_given?
+			self.my_each do |i|
+				# Return false if block returns false for any element
+				return false if !yield(i)
+			end
+			# Otherwise return true
+			return true
+		else
+			self.my_each do |i|
+				# Return false if any element is 'falsey'
+				return false if !i
+			end
+			# Otherwise return true
+			return true
+		end
+	end
+	
+	# my_any? = any?
+	def my_any?
+		if block_given?
+			self.my_each do |i|
+				# Return true if block returns true for any element
+				return true if yield(i)
+			end
+			# Otherwise return false
+			return false
+		else
+			self.my_each do |i|
+				# Return true if any element is "truthy"
+				return true if i
+			end
+			# Otherwise return false
+			return false
+		end
+	end
+	
+	# my_none? = none?
+	def my_none?
+		if block_given?
+			self.my_each do |i|
+				# Return false if block returns true for any element
+				return false if yield(i)
+			end
+			# Otherwise return true
+			return true
+		else
+			self.my_each do |i|
+				# Return false if any element is "truthy"
+				return false if i
+			end
+			# Otherwise return true
+			return true
+		end
+	end
 end
 
