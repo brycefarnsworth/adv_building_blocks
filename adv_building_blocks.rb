@@ -179,5 +179,23 @@ module Enumerable
 			return true
 		end
 	end
+	
+	# my_count = count
+	def my_count(*arg)
+		raise ArgumentError if arg.length > 1
+		counter = 0
+		if block_given?
+			self.my_each do |i|
+				counter += 1 if yield(i)
+			end
+		elsif arg.length == 1
+			self.my_each do |i|
+				counter += 1 if i == arg[0]
+			end
+		else
+			self.my_each { counter += 1 }
+		end
+		counter
+	end
 end
 
