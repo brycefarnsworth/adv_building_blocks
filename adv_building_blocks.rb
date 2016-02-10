@@ -197,5 +197,15 @@ module Enumerable
 		end
 		counter
 	end
+	
+	# my_map = map
+	def my_map
+		return self.enum_for(:my_map) unless block_given?
+		output = []
+		self.my_each do |i|
+			output << yield(i)
+		end
+		output
+	end
 end
 
