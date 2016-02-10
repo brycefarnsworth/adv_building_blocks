@@ -207,5 +207,39 @@ module Enumerable
 		end
 		output
 	end
+	
+	# my_inject = inject
+	def my_inject(*args)
+		raise ArgumentError if args.length > 2
+		if args.length == 2
+			memo = args[0]
+			self.to_a.my_each do |i|
+				memo = memo.method(args[1]).call(i)
+			end
+			memo
+		elsif block_given?
+			if args.length > 0
+				memo = args[0]
+				self.to_a.my_each do |i|
+					memo = yield(memo, i)
+				end
+				memo
+			else
+				memo = self.to_a[0]
+				self.to_a.drop(1).my_each do |i|
+					memo = yield(memo, i)
+				end
+				memo
+			end
+		else
+			raise LocalJumpError if args.length == 0
+			raise TypeError unless args[0].is_a?(Symbol)
+			memo = self.to_a[0]
+			self.to_a.drop(1).my_each do |i|
+				memo = memo.method(args[0]).call(i)
+			end
+			memo
+		end
+	end
 end
 
