@@ -197,13 +197,43 @@ module Enumerable
 		end
 		counter
 	end
-	
+
 	# my_map = map
+=begin	
+# my_map -- block
 	def my_map
 		return self.enum_for(:my_map) unless block_given?
 		output = []
 		self.my_each do |i|
 			output << yield(i)
+		end
+		output
+	end
+=end
+
+=begin
+# my_map -- proc
+	def my_map(proc=nil)
+		return self.enum_for(:my_map) unless proc
+		output = []
+		self.my_each do |i|
+			output << proc.call(i)
+		end
+		output
+	end
+=end
+
+# my_map -- proc & block
+	def my_map(proc=nil)
+		return self.enum_for(:my_map) unless proc
+		output = []
+		self.my_each do |i|
+			output << proc.call(i)
+		end
+		if block_given?
+			self.my_each do |i|
+				output << yield(i)
+			end
 		end
 		output
 	end
@@ -243,3 +273,6 @@ module Enumerable
 	end
 end
 
+def multiply_els(arr)
+	arr.my_inject(:*)
+end
